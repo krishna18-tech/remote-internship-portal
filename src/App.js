@@ -1,24 +1,35 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+
 import Login from "./pages/Login";
-import AdminDashboard from "./pages/AdminDashboard";
 import StudentDashboard from "./pages/StudentDashboard";
+import AdminDashboard from "./pages/AdminDashboard";
 import InternshipPage from "./pages/InternshipPage";
-import TaskPage from "./pages/TaskPage";
+import TasksPage from "./pages/TaskPage";
 import FeedbackPage from "./pages/FeedbackPage";
 
-function App() {
-  return (
-    <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<Login />} />
-        <Route path="/admin" element={<AdminDashboard />} />
-        <Route path="/student" element={<StudentDashboard />} />
-        <Route path="/internships" element={<InternshipPage />} />
-        <Route path="/tasks" element={<TaskPage />} />
-        <Route path="/feedback" element={<FeedbackPage />} />
-      </Routes>
-    </BrowserRouter>
-  );
+function App(){
+
+return(
+
+<Router>
+
+<Routes>
+
+<Route path="/" element={<Login/>}/>
+
+<Route path="/student" element={<StudentDashboard/>}/>
+<Route path="/admin" element={<AdminDashboard/>}/>
+
+<Route path="/internships" element={<InternshipPage/>}/>
+<Route path="/tasks" element={<TasksPage/>}/>
+<Route path="/feedback" element={<FeedbackPage/>}/>
+
+</Routes>
+
+</Router>
+
+);
+
 }
 
 export default App;

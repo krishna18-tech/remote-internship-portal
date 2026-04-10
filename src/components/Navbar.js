@@ -1,11 +1,11 @@
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 function Navbar() {
 
   const navigate = useNavigate();
-  const location = useLocation();
+  const role = localStorage.getItem("role");
 
-  const isAdmin = location.pathname.includes("admin");
+  const isAdmin = role === "admin";
 
   return (
     <div style={{

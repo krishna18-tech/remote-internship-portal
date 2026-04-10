@@ -3,279 +3,401 @@ import { useState, useEffect } from "react";
 import Layout from "../components/Layout";
 import API from "../api/api";
 
-function StudentDashboard() {
-
-  const navigate = useNavigate();
-  const [hovered, setHovered] = useState(null);
-
-  // store internships from backend
-  const [internships, setInternships] = useState([]);
-
-  // fetch internships from Spring Boot
-  useEffect(() => {
-
-    API.get("/internships")
-      .then(res => {
-        console.log(res.data);
-        setInternships(res.data);
-      })
-      .catch(err => console.log(err));
-
-  }, []);
-
-  // apply internship function
-  const applyInternship = (internshipId) => {
-
-    API.post("/applications", {
-      studentId: 1,
-      internshipId: internshipId,
-      status: "Applied"
-    })
-    .then(res => {
-      alert("Application submitted successfully");
-    })
-    .catch(err => {
-      console.log(err);
-      alert("Error applying internship");
-    });
-
-  };
-
-  const featureCard = (index) => ({
-    background: "white",
-    padding: "30px",
-    borderRadius: "16px",
-    boxShadow: "0px 12px 30px rgba(0,0,0,0.06)",
-    transition: "all 0.3s ease",
-    transform: hovered === index ? "translateY(-8px)" : "translateY(0px)"
-  });
-
-  return (
-
-    <Layout>
-
-      <h2 style={{ fontSize: "28px", fontWeight: "700" }}>
-        Student Dashboard
-      </h2>
-
-      <p style={{ color: "#6b7280", marginBottom: "40px" }}>
-        Welcome back! Track your internships, tasks, and feedback here.
-      </p>
-
-      {/* Stats Section */}
-      <div style={{ display: "flex", gap: "25px", marginBottom: "50px" }}>
-
-        {/* Active internships count from database */}
-        <div style={{
-          flex: 1,
-          background: "white",
-          padding: "30px",
-          borderRadius: "16px",
-          boxShadow: "0px 10px 25px rgba(0,0,0,0.05)"
-        }}>
-
-          <div style={{
-            fontSize: "30px",
-            fontWeight: "700",
-            color: "#5f5cff"
-          }}>
-            {internships.filter(i => i.title !== null).length}
-          </div>
-
-          <div style={{ fontSize: "14px", color: "#6b7280" }}>
-            Active Internships
-          </div>
-
-        </div>
-
-
-        {/* pending tasks placeholder */}
-        <div style={{
-          flex: 1,
-          background: "white",
-          padding: "30px",
-          borderRadius: "16px",
-          boxShadow: "0px 10px 25px rgba(0,0,0,0.05)"
-        }}>
-
-          <div style={{
-            fontSize: "30px",
-            fontWeight: "700",
-            color: "#5f5cff"
-          }}>
-            0
-          </div>
+function StudentDashboard(){
 
-          <div style={{ fontSize: "14px", color: "#6b7280" }}>
-            Pending Tasks
-          </div>
+const navigate = useNavigate();
 
-        </div>
+const [internships,setInternships] = useState([]);
+const [applied,setApplied] = useState([]);
 
+useEffect(()=>{
 
-        {/* rating placeholder */}
-        <div style={{
-          flex: 1,
-          background: "white",
-          padding: "30px",
-          borderRadius: "16px",
-          boxShadow: "0px 10px 25px rgba(0,0,0,0.05)"
-        }}>
-
-          <div style={{
-            fontSize: "30px",
-            fontWeight: "700",
-            color: "#5f5cff"
-          }}>
-            4.8★
-          </div>
-
-          <div style={{ fontSize: "14px", color: "#6b7280" }}>
-            Average Rating
-          </div>
-
-        </div>
-
-      </div>
-
-
-
-      {/* Internship Cards */}
-      <h3 style={{ marginBottom: "20px" }}>
-        Available Internships
-      </h3>
-
-      <div style={{
-        display: "grid",
-        gridTemplateColumns: "repeat(2, 1fr)",
-        gap: "20px",
-        marginBottom: "50px"
-      }}>
+API.get("/internships")
+.then(res=>{
+setInternships(res.data);
+})
+.catch(err=>console.log(err));
 
-        {internships
-          .filter(i => i.title !== null)
-          .map((item, index) => (
-
-            <div
-              key={item.id}
-              style={{
-                background: "white",
-                padding: "25px",
-                borderRadius: "14px",
-                boxShadow: "0px 8px 20px rgba(0,0,0,0.05)"
-              }}
-            >
-
-              <h4>{item.title}</h4>
-
-              <p style={{ color: "#6b7280" }}>
-                {item.description}
-              </p>
-
-              <p>
-                Duration: {item.duration}
-              </p>
+API.get("/applications")
+.then(res=>{
+setApplied(res.data);
+})
+.catch(()=>{});
 
-              <p>
-                Stipend: ₹ {item.stipend}
-              </p>
+},[]);
 
 
-              <button
-                style={{
-                  marginTop: "10px",
-                  padding: "8px 14px",
-                  background: "green",
-                  color: "white",
-                  border: "none",
-                  borderRadius: "6px",
-                  cursor: "pointer"
-                }}
 
-                onClick={() => applyInternship(item.id)}
-              >
-                Apply
-              </button>
+const applyInternship = (id)=>{
 
-            </div>
+API.post("/applications",{
+studentId:1,
+internshipId:id,
+status:"Applied"
+})
+.then(()=>{
+alert("Applied Successfully");
+})
+.catch(()=>{
+alert("error");
+});
 
-        ))}
+};
 
-      </div>
 
 
+return(
 
-      {/* Feature Cards */}
-      <div style={{
-        display: "grid",
-        gridTemplateColumns: "repeat(3, 1fr)",
-        gap: "30px"
-      }}>
+<Layout>
 
-        {[
-          {
-            title: "Internships",
-            desc: "Explore available internship opportunities.",
-            path: "/internships"
-          },
+<h2 style={title}>Student Dashboard</h2>
 
-          {
-            title: "My Tasks",
-            desc: "Track assigned tasks and progress.",
-            path: "/tasks"
-          },
+<p style={subtitle}>
+Monitor your internships, applications and performance
+</p>
 
-          {
-            title: "Feedback",
-            desc: "View mentor feedback and ratings.",
-            path: "/feedback"
-          }
 
-        ].map((card, index) => (
+{/* STATISTICS */}
+<div style={statsGrid}>
 
-          <div
-            key={index}
-            style={featureCard(index)}
+<StatCard
+number={internships.length}
+label="Internships Available"
+/>
 
-            onMouseEnter={() => setHovered(index)}
-            onMouseLeave={() => setHovered(null)}
-          >
+<StatCard
+number={applied.length}
+label="Applications"
+/>
 
-            <h4>{card.title}</h4>
+<StatCard
+number="4.8★"
+label="Rating"
+/>
 
-            <p style={{
-              color: "#6b7280",
-              marginBottom: "20px"
-            }}>
-              {card.desc}
-            </p>
+<StatCard
+number="92%"
+label="Progress"
+/>
 
+</div>
 
-            <button
-              style={{
-                padding: "10px 18px",
-                background: "linear-gradient(90deg, #5f5cff, #7c3aed)",
-                border: "none",
-                borderRadius: "8px",
-                color: "white",
-                cursor: "pointer"
-              }}
 
-              onClick={() => navigate(card.path)}
-            >
-              Open
-            </button>
 
-          </div>
+{/* QUICK ACTION */}
+<h3 style={sectionTitle}>
+Quick Actions
+</h3>
 
-        ))}
+<div style={quickGrid}>
 
-      </div>
+<ActionCard
+title="Browse Internships"
+desc="View available opportunities"
+onClick={()=>navigate("/internships")}
+/>
 
-    </Layout>
+<ActionCard
+title="My Tasks"
+desc="Track assigned tasks"
+onClick={()=>navigate("/tasks")}
+/>
 
-  );
+<ActionCard
+title="Feedback"
+desc="View mentor feedback"
+onClick={()=>navigate("/feedback")}
+/>
+
+</div>
+
+
+
+{/* INTERNSHIPS */}
+<h3 style={sectionTitle}>
+Latest Internships
+</h3>
+
+
+<div style={internGrid}>
+
+{internships.slice(0,4).map(item=>(
+
+<div key={item.id} style={internCard}>
+
+<h4>{item.title}</h4>
+
+<p style={gray}>
+{item.description}
+</p>
+
+<p>
+Duration: {item.duration}
+</p>
+
+<p>
+₹ {item.stipend}
+</p>
+
+
+<button
+style={applyBtn}
+onClick={()=>applyInternship(item.id)}
+>
+
+Apply
+
+</button>
+
+
+</div>
+
+))}
+
+</div>
+
+
+
+{/* PROGRESS SECTION */}
+<h3 style={sectionTitle}>
+My Progress
+</h3>
+
+
+<div style={progressBox}>
+
+<div style={progressItem}>
+HTML
+<div style={bar}>
+<div style={{...fill,width:"90%"}}></div>
+</div>
+</div>
+
+
+<div style={progressItem}>
+React
+<div style={bar}>
+<div style={{...fill,width:"75%"}}></div>
+</div>
+</div>
+
+
+<div style={progressItem}>
+Database
+<div style={bar}>
+<div style={{...fill,width:"65%"}}></div>
+</div>
+</div>
+
+</div>
+
+
+
+</Layout>
+
+);
 
 }
+
+
+
+function StatCard({number,label}){
+
+return(
+
+<div style={statCard}>
+
+<h2>{number}</h2>
+
+<p>{label}</p>
+
+</div>
+
+);
+
+}
+
+
+
+function ActionCard({title,desc,onClick}){
+
+return(
+
+<div
+style={actionCard}
+onClick={onClick}
+>
+
+<h4>{title}</h4>
+
+<p style={gray}>
+{desc}
+</p>
+
+<button style={btn}>
+Open
+</button>
+
+</div>
+
+);
+
+}
+
+
+
+/* styles */
+
+const title={
+fontSize:"28px",
+fontWeight:"700"
+};
+
+const subtitle={
+color:"#6b7280",
+marginBottom:"35px"
+};
+
+
+
+const statsGrid={
+display:"grid",
+gridTemplateColumns:"repeat(4,1fr)",
+gap:"20px",
+marginBottom:"40px"
+};
+
+
+
+const statCard={
+
+background:"linear-gradient(135deg,#5f5cff,#7c3aed)",
+color:"white",
+padding:"20px",
+borderRadius:"12px"
+
+};
+
+
+
+const quickGrid={
+
+display:"grid",
+gridTemplateColumns:"repeat(3,1fr)",
+gap:"20px",
+marginBottom:"40px"
+
+};
+
+
+
+const actionCard={
+
+background:"white",
+padding:"20px",
+borderRadius:"12px",
+boxShadow:"0 8px 20px rgba(0,0,0,0.05)",
+cursor:"pointer"
+
+};
+
+
+
+const internGrid={
+
+display:"grid",
+gridTemplateColumns:"repeat(2,1fr)",
+gap:"20px",
+marginBottom:"40px"
+
+};
+
+
+
+const internCard={
+
+background:"white",
+padding:"20px",
+borderRadius:"12px",
+boxShadow:"0 8px 20px rgba(0,0,0,0.05)"
+
+};
+
+
+
+const progressBox={
+
+background:"white",
+padding:"25px",
+borderRadius:"12px",
+boxShadow:"0 8px 20px rgba(0,0,0,0.05)"
+
+};
+
+
+
+const progressItem={
+marginBottom:"15px"
+};
+
+
+
+const bar={
+
+background:"#eee",
+height:"8px",
+borderRadius:"10px"
+
+};
+
+
+
+const fill={
+
+background:"#5f5cff",
+height:"8px",
+borderRadius:"10px"
+
+};
+
+
+
+const sectionTitle={
+marginBottom:"15px"
+};
+
+
+
+const btn={
+
+marginTop:"10px",
+padding:"6px 12px",
+background:"#5f5cff",
+color:"white",
+border:"none",
+borderRadius:"6px"
+
+};
+
+
+
+const applyBtn={
+
+marginTop:"10px",
+padding:"6px 12px",
+background:"green",
+color:"white",
+border:"none",
+borderRadius:"6px"
+
+};
+
+
+
+const gray={
+color:"#6b7280"
+};
+
+
 
 export default StudentDashboard;
