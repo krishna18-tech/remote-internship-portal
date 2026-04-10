@@ -1,4 +1,4 @@
-import { useState } from "react";
+﻿import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import API from "../api/api";
 
@@ -166,17 +166,15 @@ function Login() {
   return (
     <div className="login-wrapper">
       <div className="login-card">
-        <h2 className="login-title">
-          {isSignUp ? "Sign Up" : "Sign In"} - Remote Internship Portal
-        </h2>
+        <div className="login-card-header">
+          <span className="login-badge">Remote Internship Portal</span>
+          <h2 className="login-title">{isSignUp ? "Create an account" : "Welcome back"}</h2>
+          <p className="login-subtitle">Secure access for students and admins to manage internships, tasks, and feedback.</p>
+        </div>
 
-        <p className="login-subtitle">
-          Manage internships, tasks & mentor feedback
-        </p>
+        {error && <div className="error-message" role="alert">{error}</div>}
 
-        {error && <div className="error-message" style={{color: 'red', marginBottom: '10px'}}>{error}</div>}
-
-        <form onSubmit={handleSubmit}>
+        <form className="login-form" onSubmit={handleSubmit}>
           {isSignUp && (
             <input
               type="text"
@@ -242,9 +240,8 @@ function Login() {
 
         <button
           type="button"
-          className="toggle-btn"
+          className="login-toggle"
           onClick={() => setIsSignUp(!isSignUp)}
-          style={{marginTop: '10px', background: 'none', border: 'none', color: 'blue', cursor: 'pointer'}}
         >
           {isSignUp ? "Already have an account? Sign In" : "Don't have an account? Sign Up"}
         </button>
